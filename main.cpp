@@ -7,7 +7,6 @@ using namespace std;
     Jednokierunkowa lista. Struktura reprezentujaca elementy listy
 */
 struct Node { 
-   
     Node  * left, * right, * next;
     char letter;
     int count;
