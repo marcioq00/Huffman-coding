@@ -3,26 +3,52 @@
 
 using namespace std;
 
-int main()
-{
-    cout<<"Podaj tekst do skompresowania: ";
-    string tekst;
-    cin >> tekst;
-    int charCount[26] = {};
-    for(char c : tekst) {
-        if(c >= 'a' && c <= 'z') {
-            charCount[c - 'a']++;
+/*
+    Jednokierunkowa lista. Struktura reprezentujaca elementy listy
+*/
+struct Node { 
+   
+    Node  * left, * right, * next;
+    char letter;
+    int count;
+};
+
+void createNodeList (Node* & root, string word) {
+    unsigned int i;
+    Node * p;
+
+    root = NULL;
+    for(i = 0; i < word.length(); i++) {
+        p = root;
+        while( p && ( p->letter != word [ i ] ) ) {
+         p = p->next;
+
         }
-    }
-    for (int i = 0; i < 26; i++) {
-        if (charCount[i] > 0) {
-            char c = 'a' + i;
-            std::cout << "Litera " << c << " wystapila " << charCount[i] << " razy." << std::endl;
+        if( !p ) {                      
+          p = new Node;             
+          p->next   = root;            
+          p->left   = NULL;            
+          p->right  = NULL;
+          p->letter = word[ i ];
+          p->count  = 0;
+          root = p;              
         }
+        p->count++;
     }
 
-    /*for(int i=0; i < tekst.length(); i++) {
-        cout << tekst[i] << endl;
-    }*/
+    /*Petla while pomocniczo do wyswietlenia listy wezlow*/
+    p = root;
+    while (p != NULL) {
+        cout << p->letter << " ";
+        p = p->next;
+    }
+}
+int main()
+{
+    Node * root;
+    string word;
+    cout << "Podaj tekst do skompresowania: ";
+    cin >> word;
+    createNodeList(root, word);
     return 0;
 }
