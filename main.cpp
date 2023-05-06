@@ -105,6 +105,27 @@ void printHuffmanTree ( Node * p, string b )
   }
 }
 
+bool Code ( char c, Node * p, string b )
+{
+  if( !p->left )
+  {
+    if( c != p->letter ) return false;
+    else
+    {
+      cout << b;
+      return true;
+    }
+  }
+  else return Code ( c, p->left, b+"0" ) || Code ( c, p->right, b+"1" );
+}
+
+void codeHuffman ( Node * root, string s )
+{
+  unsigned int i;
+
+  for( i = 0; i < s.length( ); i++ )
+    Code ( s [ i ], root, "" );
+}
 
 int main()
 {
@@ -116,5 +137,6 @@ int main()
     createNodeList (root, word);
     createHuffmanTree (root);
     printHuffmanTree (root, "");
+    codeHuffman (root, word);
     return 0;
 }
