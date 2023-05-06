@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-
+#include <queue>
 using namespace std;
 
 /*
@@ -12,55 +12,90 @@ struct Node {
     int count;
 };
 
-void createNodeList (Node* & root, string word) {
-    unsigned int i;
-    Node * p, * q, * tmp;
+void createNodeList ( Node * & root, string s )
+{
+  unsigned int i, x;
+  char cx;
+  Node * p;
+  bool t;
 
-    root = NULL;
-    for(i = 0; i < word.length(); i++) {
-        p = root;
-        while( p && ( p->letter != word [ i ] ) ) {
-         p = p->next;
-
-        }
-        if( !p ) {
-          p = new Node;
-          p->next   = root;
-          p->left   = NULL;
-          p->right  = NULL;
-          p->letter = word[ i ];
-          p->count  = 0;
-          root = p;
-        }
-        p->count++;
-    }
-
-   // Sortowanie przez wstawianie
+  root = NULL;
+  for( i = 0; i < s.length( ); i++ )
+  {
     p = root;
-    root = NULL;
-    while (p != NULL) {
-        tmp = p->next;
-        if (root == NULL || p->count > root->count) {
-            p->next = root;
-            root = p;
-        } else {
-            q = root;
-            while (q->next != NULL && p->count <= q->next->count) {
-                q = q->next;
-            }
-            p->next = q->next;
-            q->next = p;
-        }
-        p = tmp;
+    while( p && ( p->letter != s [ i ] ) ) p = p->next;
+    if( !p )
+    {
+      p = new Node;
+      p->next  = root;
+      p->left  = NULL;
+      p->right = NULL;
+      p->letter    = s [ i ];
+      p->count = 0;
+      root     = p;
     }
-
-    // Wyswietlanie posortowanej listy wezlow
+    p->count++;
+  }
+  do
+  {
+    t = true;
     p = root;
-    while (p != NULL) {
-        cout << p->letter << " : " << p->count << endl;
-        p = p->next;
+    while( p->next )
+    {
+      if( p->count > p->next->count )
+      {
+        cx = p->letter;
+        p->letter = p->next->letter;
+        p->next->letter = cx;
+        x = p->count;
+        p->count = p->next->count;
+        p->next->count = x;
+        t = false;
+      }
+      p = p->next;
     }
+  } while( !t );
 }
+
+
+
+void createHuffmanTree ( Node * & root )
+{
+  Node *p, *r, *v1, *v2;
+
+  while( true )
+  {
+    v1 = root;
+    v2 = v1->next;
+
+    if( !v2 ) break;
+
+    root = v2->next;
+
+    p = new Node;
+    p->left = v1;
+    p->right = v2;
+    p->count = v1->count + v2->count;
+
+
+
+    if( !root || ( p->count <= root->count ) )
+    {
+      p->next = root;
+      root = p;
+      continue;
+    }
+
+    r = root;
+
+    while( r->next && ( p->count > r->next->count ) ) r = r->next;
+
+    p->next = r->next;
+    r->next = p;
+  }
+}
+
+
 
 
 int main()
@@ -69,6 +104,8 @@ int main()
     string word;
     cout << "Podaj tekst do skompresowania: ";
     cin >> word;
-    createNodeList(root, word);
+    root = NULL;
+    createNodeList (root, word);
+    createHuffmanTree (root);
     return 0;
 }
