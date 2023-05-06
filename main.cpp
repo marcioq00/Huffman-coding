@@ -95,7 +95,15 @@ void createHuffmanTree ( Node * & root )
   }
 }
 
-
+void printHuffmanTree ( Node * p, string b )
+{
+  if( !p->left ) cout << p->letter << ": " << b << endl;
+  else
+  {
+    printHuffmanTree ( p->left, b + "0" );
+    printHuffmanTree ( p->right, b + "1" );
+  }
+}
 
 
 int main()
@@ -107,5 +115,6 @@ int main()
     root = NULL;
     createNodeList (root, word);
     createHuffmanTree (root);
+    printHuffmanTree (root, "");
     return 0;
 }
